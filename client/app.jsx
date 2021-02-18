@@ -1,25 +1,29 @@
 // import react from 'react';
-// import react-dom from 'react-dom';
+// import react-dom from 'react-dom'; not needed as this is imported from a cdn in the index.html file
+
+// import axios = require('axios');
 
 
 class App extends React.Component {
   constructor(props) {
     super(props) // this sends the appropriate props to the react component constructor
     this.state = {
-      name: "steve",
-      email: "google@yahoo.spam",
-      password: "potatoes",
-      addressLnOne: "123 wallaby ln",
-      addressLnTwo: "hawaii",
-      phoneNum: "123-123-1223",
-      card: "11111112222",
-      cvv: "123",
-      zip: "99999",
+      name: "",
+      email: "",
+      password: "",
+      addressLnOne: "",
+      addressLnTwo: "",
+      phone: "",
+      creditCard: "",
+      expiration: "",
+      cvv: "",
+      zipCode: "",
       currentForm: 0
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.axiosRequest = this.axiosRequest.bind(this);
 
   }
 
@@ -32,22 +36,48 @@ class App extends React.Component {
     })
   }
 
+  // this will be the handle change event to alter the state back in the parent App
   handleChange = (event) => {
-    // this will be the handle change event to alter the state back in the parent App
-    // uses e.target.value
+    this.setState({
+      [event.target.name]: event.target.value
+    })
+  }
+
+
+  axiosRequest = (state) => {
+    axios.post('http://localhost:3002/', state)
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
   }
 
   // this will be the button which is pressed at the end of completing each form
   handleSubmit = (event) => {
     event.preventDefault();
-    console.log('stand in for submission');
+    // console.log('STATE ON SUBMISSION', this.state);
     if (this.state.currentForm < 3) {
       this.setState({
         currentForm: this.state.currentForm + 1
       })
     } else {
+      console.log('Form being submitted', JSON.stringify(this.state));
+      // perform an ajax or axios post request to the server
+      this.axiosRequest(this.state);
       this.setState({
-        currentForm: 0
+        "name": "",
+        "email": "",
+        "password": "",
+        "addressLnOne": "",
+        "addressLnTwo": "",
+        "phone": "",
+        "creditCard": "",
+        "expiration": "",
+        "cvv": "",
+        "zipCode": "",
+        "currentForm": 0
       })
 
     }
@@ -96,17 +126,17 @@ var FormOne = ({currentForm, handleChange, handleSubmit}) => {
     <form>
       <label for="name">Name</label>
       <br></br>
-      <input type="textarea" name="name"></input>
+      <input type="textarea" name="name" onChange={handleChange}></input>
       <br></br>
       <br></br>
       <label for="email">Email</label>
       <br></br>
-      <input type="textarea" name="email"></input>
+      <input type="textarea" name="email" onChange={handleChange}></input>
       <br></br>
       <br></br>
       <label for="password">Password</label>
       <br></br>
-      <input type="textarea" name="password"></input>
+      <input type="textarea" name="password" onChange={handleChange}></input>
       <br></br>
       <input type="submit" onClick={handleSubmit}></input>
     </form>
@@ -125,16 +155,16 @@ var FormTwo = ({currentForm, handleChange, handleSubmit}) => {
     <form>
       <label for="addressLnOne">Address Line One</label>
       <br></br>
-      <input type="textarea" name="addressLnOne"></input>
+      <input type="textarea" name="addressLnOne" onChange={handleChange}></input>
       <br></br>
       <label for="addressLnTwo">Address Line Two</label>
       <br></br>
-      <input type="textarea" name="addressLnTwo"></input>
+      <input type="textarea" name="addressLnTwo" onChange={handleChange}></input>
       <br></br>
       <br></br>
       <label for="phone">Phone Number</label>
       <br></br>
-      <input type="textarea" name="phone"></input>
+      <input type="textarea" name="phone" onChange={handleChange}></input>
       <br></br>
       <input type="submit" onClick={handleSubmit}></input>
     </form>
@@ -153,22 +183,22 @@ var FormThree = ({currentForm, handleChange, handleSubmit}) => {
     <form>
       <label for="creditCard">Credit Card</label>
       <br></br>
-      <input type="textarea" name="creditCard"></input>
+      <input type="textarea" name="creditCard" onChange={handleChange}></input>
       <br></br>
       <br></br>
       <label for="expiration">Expiration Date</label>
       <br></br>
-      <input type="textarea" name="expiration"></input>
+      <input type="textarea" name="expiration" onChange={handleChange}></input>
       <br></br>
       <br></br>
       <label for="cvv">CVV code</label>
       <br></br>
-      <input type="textarea" name="cvv"></input>
+      <input type="textarea" name="cvv" onChange={handleChange}></input>
       <br></br>
       <br></br>
       <label for="zipCode">Billing Zip Code</label>
       <br></br>
-      <input type="textarea" name="zipCode"></input>
+      <input type="textarea" name="zipCode" onChange={handleChange}></input>
       <br></br>
       <input type="submit" onClick={handleSubmit}></input>
     </form>
